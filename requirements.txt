@@ -1,0 +1,10 @@
+# For the custom implementation (no dependencies)
+# Just Python 3.7+
+
+# For LangChain implementation with Gemini (optional)
+# Uncomment below if you want to use langchain_agent.py:
+langchain>=0.3.0
+langchain-google-genai>=2.0.0
+langgraph>=0.2.0
+google-generativeai>=0.8.0
+python-dotenv>=1.0.0
