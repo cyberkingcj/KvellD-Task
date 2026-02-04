@@ -24,26 +24,29 @@ class Agent:
     
     def parse_query(self, query):
         # break down the query into individual steps
+        original_query = query
         query = query.lower().strip()
         steps = []
         
         # split on common separators like "then" and ", and"
         parts = re.split(r'(?:,?\s+then\s+|,\s+and\s+)', query)
+        original_parts = re.split(r'(?:,?\s+then\s+|,\s+and\s+)', original_query, flags=re.IGNORECASE)
         
-        for part in parts:
+        for i, part in enumerate(parts):
             part = part.strip().rstrip(',.')
-            step = self._parse_step(part)
+            original_part = original_parts[i].strip().rstrip(',.')
+            step = self._parse_step(part, original_part)
             if step:
                 steps.append(step)
         
         return steps
     
-    def _parse_step(self, text):
+    def _parse_step(self, text, original_text):
         # figure out what operation and arguments from the text
         numbers = re.findall(r'-?\d+\.?\d*', text)
         
-        # extract quoted strings for string operations
-        strings = re.findall(r'["\']([^"\']*)["\']', text)
+        # extract quoted strings from ORIGINAL text to preserve case
+        strings = re.findall(r'["\']([^"\']*)["\']', original_text)
         
         # check which operation keyword is in the text
         for keyword, (op, arg_count) in self.operation_map.items():
@@ -54,9 +57,14 @@ class Agent:
                         return (op, [strings[0]])
                     return (op, [])
                 elif arg_count == 2:
-                    # for concat, look for two strings
-                    if op == 'concat' and len(strings) >= 2:
-                        return (op, [strings[0], strings[1]])
+                    # for concat, look for strings
+                    if op == 'concat':
+                        if len(strings) >= 2:
+                            # two strings provided
+                            return (op, [strings[0], strings[1]])
+                        elif len(strings) >= 1:
+                            # one string, will use result + string
+                            return (op, [strings[0]])
                     # for numeric operations
                     if 'from' in text or 'by' in text:
                         if numbers:
