@@ -18,7 +18,7 @@ The agent can:
 
 ### Installation
 ```bash
-git clone <your-repo-url>
+git clone https://github.com/cyberkingcj/KvellD-Task
 cd "KvellD Task"
 ```
 
