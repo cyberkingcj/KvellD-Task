@@ -90,8 +90,7 @@ def main():
     agent = create_langchain_agent()
     
     test_queries = [
-        "Add 1 and 1, then multiply the result by 10, then subtract 0.5, then add 4",
-        "Add 5 and 3, then divide by 2",
+        "Add 1 and 1, then multiply the result by 10, then subtract 0.5, then add 4"
     ]
     
     print("=== LangChain Agent with Gemini ===")
